@@ -1,17 +1,14 @@
-package car.rental.utility;
+package car.rental.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
-public class BookingRequest {
+public class BookingDTO {
 
     @NotNull(message = "startdate can't be empty")
     @Temporal(TemporalType.DATE)
@@ -32,6 +29,14 @@ public class BookingRequest {
     @Temporal(TemporalType.TIME)
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="HH:mm:ss", timezone = "IST")
     private LocalTime endTime;
+
+    private long carId;
+
+    private long userId;
+
+    private double bookingAmount;
+
+    private String DLNumber;
 
     public LocalDate getStartDate() {
         return startDate;
@@ -65,14 +70,49 @@ public class BookingRequest {
         this.endTime = endTime;
     }
 
+    public long getCarId() {
+        return carId;
+    }
+
+    public void setCarId(long carId) {
+        this.carId = carId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public double getBookingAmount() {
+        return bookingAmount;
+    }
+
+    public void setBookingAmount(double bookingAmount) {
+        this.bookingAmount = bookingAmount;
+    }
+
+    public String getDLNumber() {
+        return DLNumber;
+    }
+
+    public void setDLNumber(String DLNumber) {
+        this.DLNumber = DLNumber;
+    }
+
     @Override
     public String toString() {
-        return "BookingRequest{" +
+        return "BookingRequestFinal{" +
                 "startDate=" + startDate +
                 ", startTime=" + startTime +
                 ", endDate=" + endDate +
                 ", endTime=" + endTime +
+                ", carId=" + carId +
+                ", userId=" + userId +
+                ", bookingAmount=" + bookingAmount +
+                ", DLNumber='" + DLNumber + '\'' +
                 '}';
     }
 }
-

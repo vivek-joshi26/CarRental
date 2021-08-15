@@ -3,10 +3,9 @@ package car.rental.controller;
 import car.rental.exception.ErrorMessage;
 import car.rental.model.Booking;
 import car.rental.model.Car;
-import car.rental.repository.BookingRepo;
-import car.rental.utility.BookingRequest;
+import car.rental.model.dto.BookingRequestDTO;
 import car.rental.services.BookingService;
-import car.rental.utility.BookingRequestFinal;
+import car.rental.model.dto.BookingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,7 +26,7 @@ public class BookingController {
     @Autowired
     BookingService bookingService;
 
-    //Ignore
+    //Ignore, to directly post a booking without checking availability
     @PostMapping
     public ResponseEntity addBooking(@RequestBody Booking booking){
         return bookingService.addBookingDirectly(booking);
@@ -36,8 +34,8 @@ public class BookingController {
 
 
     //Return Map with cars and corresponding TotalCharges
-    @PostMapping("/add")
-    public ResponseEntity addBooking2(@RequestBody @Valid BookingRequest bookingRequest, Errors errors) throws Exception{
+    @PostMapping("/availableCars")
+    public ResponseEntity findAvailableCars(@RequestBody @Valid BookingRequestDTO bookingRequestDTO, Errors errors) throws Exception{
         if(errors.hasErrors()){
             String response =  errors.getAllErrors().stream().map(x->x.getDefaultMessage()).collect(Collectors.joining(","));
             ErrorMessage errorMessage = new ErrorMessage();
@@ -47,7 +45,8 @@ public class BookingController {
         }
         else {
             //System.out.println("Calling Checkbooking");
-            Map<Car,Double> availableCars = bookingService.fetchAvailableCars(bookingRequest);
+            // ***************** Add logger *********************
+            Map<Car,Double> availableCars = bookingService.fetchAvailableCars(bookingRequestDTO);
             if(availableCars.size()>0)
                 return ResponseEntity.ok(availableCars);
             else
@@ -58,8 +57,8 @@ public class BookingController {
 
 
     //Make the final booking
-    @PostMapping("/booking")
-    public ResponseEntity addBooking3(@RequestBody @Valid BookingRequestFinal bookingRequestFinal, Errors errors) throws Exception{
+    @PostMapping("/makeBooking")
+    public ResponseEntity makeBooking(@RequestBody @Valid BookingDTO bookingDTO, Errors errors) throws Exception{
         if(errors.hasErrors()){
             String response =  errors.getAllErrors().stream().map(x->x.getDefaultMessage()).collect(Collectors.joining(","));
             ErrorMessage errorMessage = new ErrorMessage();
@@ -68,7 +67,8 @@ public class BookingController {
             return ResponseEntity.ok(errorMessage);
         }
         else {
-            return bookingService.addBooking(bookingRequestFinal);
+            // ***************** Add logger *********************
+            return bookingService.addBooking(bookingDTO);
         }
     }
 }

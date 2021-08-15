@@ -17,8 +17,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/plans")
 public class PlanController {
 
+    /*
     @Autowired
     PlanService planService;
+
+     */
+
+    // **********  Autowired can be avoided by declaring a member and intializing in the constructor
+    private final PlanService planService;
+
+    public PlanController(PlanService planService) {
+        this.planService = planService;
+    }
 
     // Add a new Plan to DB
     @PostMapping
@@ -36,7 +46,7 @@ public class PlanController {
 
     // Get all the plans
     @GetMapping
-    public List<Plan> findPlans(){
+    public List<Plan> getPlans(){
         return planService.findPlans();
     }
 

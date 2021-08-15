@@ -80,14 +80,14 @@ public class UserController {
 
     //To login user using URI parameters, for special character we need to encode them in request like for #,replace it with %23
     @GetMapping(value = "/login/{emailid}/{password}")
-    public ResponseEntity loginUser2(@PathVariable("emailid") String emailid,@PathVariable("password") String password) throws UserNotPresent{
+    public ResponseEntity loginUserPathVar(@PathVariable("emailid") String emailid,@PathVariable("password") String password) throws UserNotPresent{
         System.out.println(emailid+password);
         return userService.loginUser(emailid,password);
     }
 
     //To login user using query parameters
     @GetMapping(value = "/login")
-    public ResponseEntity loginUser3(@RequestParam("emailid") String emailid,@RequestParam("password") String password) throws UserNotPresent{
+    public ResponseEntity loginUserQueryParam(@RequestParam("emailid") String emailid,@RequestParam("password") String password) throws UserNotPresent{
         return userService.loginUser(emailid,password);
     }
 
